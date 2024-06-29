@@ -71,3 +71,14 @@
 | book_id          | INT         |
 | quantity         | INT         |
 
+
+CREATE TABLE Authors (
+    Author_id INT PRIMARY KEY,
+    First_name VARCHAR(255) NOT NULL,
+	Last_name VARCHAR(255) NOT NULL,
+	Date_of_birth DATE NOT NULL,
+	Country_of_origin VARCHAR(255) NOT NULL,
+	Genre VARCHAR(255) NOT NULL,
+	Books_published INT NOT NULL,
+    Years_active INT NOT NULL
+);
