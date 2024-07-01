@@ -167,6 +167,8 @@ CREATE TABLE order_items
 
 **set of DDL/DML For customers tables**
 
+
+```sql
 CREATE TABLE customers
   (
      customer_id   INT PRIMARY KEY,
@@ -181,7 +183,10 @@ CREATE TABLE customers
      last_purchase DATE NOT NULL
   );
 
+```
+
 **INSERT Query:**
+```sql
 INSERT INTO Customers (Customer_id, First_name, Last_name, Date_Of_Birth, Gender, Email, Phone_Number, Address, Amount_spent, Last_purchase) VALUES
 (1, 'Alice', 'Johnson', '1940-08-05', 'Female', 'alice@example.com', '123-456-7890', '123 Main St', 150.75, '2022-05-10'),
 (2, 'Bob', 'Williams', '1964-07-13', 'Male', 'bob@example.com', '098-765-4321', '456 Elm St', 200.00, '2018-01-25');
@@ -189,16 +194,26 @@ INSERT INTO Customers (Customer_id, First_name, Last_name, Date_Of_Birth, Gender
 (4, 'Jane', 'Smith', '1992-08-30', 'Female', 'jane.smith@example.com', '555-5678', '456 Oak St', 250.00, '2024-01-15'),
 (5, 'Jerry', 'Johnson', '1985-03-25', 'Female', 'alice.johnson@example.com', '555-9101', '789 Pine St', 325.50, '2024-02-10');
 (6, 'Tom', 'Johnson', '1987-03-25', 'Female', 'alice.johnson@example.com', '555-9101', '799 Pine St', 325.50, '2024-02-10');
+
+```
 **SELECT QUERY:**
+```sql
 SELECT * FROM Customers WHERE customer_id = 3;
+
+```
 **UPDATE QUERY:**
+```sql
 UPDATE Customers 
 SET Address = '123 Larch Street' 
 WHERE customer_id = 3;
-**DELETE QUERY:**
-DELETE FROM Customers WHERE customer_id = 3;
 
+```
+**DELETE QUERY:**
+```sql
+DELETE FROM Customers WHERE customer_id = 3;
+```
 **Power writers (authors) with more than X books in the same genre published within the last X years **
+```sql
 SELECT 
     a.author_id, 
     a.genre, 
@@ -213,20 +228,29 @@ GROUP BY
     a.author_id,a.genre
 HAVING 
     COUNT(b.book_id) > 1;
+
+```
     
 
 **Loyal Customers who has spent more than X dollars in the last year**
+```sql
 SELECT customer_id, First_name, Last_name, Email, Amount_spent,Last_purchase
 FROM Customers
 WHERE Amount_spent > 200 AND Last_purchase >= CURRENT_DATE - INTERVAL '1 year';
 
+```
+
 **Well Reviewed books that has a better user rating than average**
+```sql
 SELECT B.book_id,b.title,R.rating
 FROM Books B
 JOIN Reviews R ON B.book_id = R.book_id
 where R.rating > (SELECT AVG(rating) FROM Reviews);
 
+```
+
 **The most popular genre by sales**
+```sql
 SELECT books.genre, SUM(order_items.quantity ) AS total_sales
 FROM Books books
 JOIN Order_Items order_items ON books.book_id = order_items.book_id
@@ -234,11 +258,15 @@ GROUP BY genre
 ORDER BY total_sales DESC
 LIMIT 1;
 
+```
 **The 10 most recent posted reviews by Customers**
+```sql
 SELECT review_id, book_id, customer_id, rating, review_text, review_date
 FROM Reviews
 ORDER BY review_date DESC
 LIMIT 10;
+
+```
 
 **Create a Typescript interface that will allow modification to a table.**
 
