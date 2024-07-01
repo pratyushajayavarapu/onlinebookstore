@@ -184,6 +184,24 @@ CREATE TABLE customers
   );
 
 ```
+**ALTER Query**
+```sql
+ALTER TABLE customers
+ALTER COLUMN phone_number TYPE VARCHAR(20);
+
+```
+**DROP Query**
+```sql
+DROP TABLE customers;
+
+```
+**TRUNCATE Query**
+
+```sql
+TRUNCATE TABLE customers;
+
+```
+
 
 **INSERT Query:**
 ```sql
