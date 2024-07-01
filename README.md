@@ -270,6 +270,8 @@ LIMIT 10;
 
 **Create a Typescript interface that will allow modification to a table.**
 
+
+```sql
 import { Pool } from 'pg';
 
 // Configure the PostgreSQL connection
@@ -386,3 +388,5 @@ async function deleteBook(book_id: number): Promise<void> {
     // Close the pool
     await pool.end();
 })();
+
+```
