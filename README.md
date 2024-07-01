@@ -72,6 +72,8 @@
 | book_id          | INT         |
 | quantity         | INT         |
 **code block containing only valid SQL syntax which will create your sample data base **
+
+```sql
 CREATE TABLE authors
   (
      author_id         INT PRIMARY KEY,
@@ -83,8 +85,10 @@ CREATE TABLE authors
      books_published   INT NOT NULL,
      years_active      INT NOT NULL
   ); 
+```
 
 
+```sql
 CREATE TABLE customers
   (
      customer_id   INT PRIMARY KEY,
@@ -97,9 +101,12 @@ CREATE TABLE customers
      address       VARCHAR(255) NOT NULL,
      amount_spent  DECIMAL(10, 2) DEFAULT 0,
      last_purchase DATE NOT NULL
-  ); 
+  );
+``` 
 
 
+
+```sql
 CREATE TABLE books
   (
      book_id      INT PRIMARY KEY,
@@ -112,8 +119,10 @@ CREATE TABLE books
      author_id    INT,
      FOREIGN KEY (author_id) REFERENCES authors(author_id)
   );
+```
 
 
+```sql
 CREATE TABLE reviews
   (
      review_id   INT PRIMARY KEY,
@@ -126,7 +135,9 @@ CREATE TABLE reviews
      FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
   );
 
+```
 
+```sql
 CREATE TABLE orders
   (
      order_id         INT PRIMARY KEY,
@@ -139,8 +150,10 @@ CREATE TABLE orders
      order_status     VARCHAR(255),
      FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
   ); 
+```
 
 
+```sql
 CREATE TABLE order_items
   (
      order_item_id INT PRIMARY KEY,
@@ -149,7 +162,8 @@ CREATE TABLE order_items
      quantity      INT NOT NULL,
      FOREIGN KEY (order_id) REFERENCES orders(order_id),
      FOREIGN KEY (book_id) REFERENCES books(book_id)
-  );
+  ); 
+```
 
 **set of DDL/DML For customers tables**
 
