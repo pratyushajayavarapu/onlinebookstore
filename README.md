@@ -1,5 +1,5 @@
 # onlinebookstore
- Clearly title and identify the tables required and what type each of the attribute is
+ **Clearly title and identify the tables required and what type each of the attribute is**
 ### Authors
 | Attribute        | Type        |
 |------------------|-------------|
@@ -71,9 +71,7 @@
 | order_id         | INT         |
 | book_id          | INT         |
 | quantity         | INT         |
-
- code block containing only valid sql syntax which will create your sample data base 
-
+**code block containing only valid SQL syntax which will create your sample data base **
 CREATE TABLE authors
   (
      author_id         INT PRIMARY KEY,
@@ -186,6 +184,23 @@ WHERE customer_id = 3;
 **DELETE QUERY:**
 DELETE FROM Customers WHERE customer_id = 3;
 
+**Power writers (authors) with more than X books in the same genre published within the last X years **
+SELECT 
+    a.author_id, 
+    a.genre, 
+    COUNT(b.book_id) AS book_count
+FROM 
+    Authors a
+JOIN 
+    Books b ON a.author_id = b.author_id
+WHERE 
+    b.publish_date >= CURRENT_DATE - INTERVAL '5 years'
+GROUP BY 
+    a.author_id,a.genre
+HAVING 
+    COUNT(b.book_id) > 1;
+    
+
 **Loyal Customers who has spent more than X dollars in the last year**
 SELECT customer_id, First_name, Last_name, Email, Amount_spent,Last_purchase
 FROM Customers
@@ -205,8 +220,127 @@ GROUP BY genre
 ORDER BY total_sales DESC
 LIMIT 1;
 
-**The 10 most recent posted reviews by Customers **
+**The 10 most recent posted reviews by Customers**
 SELECT review_id, book_id, customer_id, rating, review_text, review_date
 FROM Reviews
 ORDER BY review_date DESC
 LIMIT 10;
+
+**Create a Typescript interface that will allow modification to a table.**
+
+import { Pool } from 'pg';
+
+// Configure the PostgreSQL connection
+const pool = new Pool({
+    user: postgres,
+    host: localhost,
+    database: online_Book_Store,
+    password: password,
+    port: 5432,
+});
+
+// TypeScript interface for the Books table
+interface Book {
+    book_id: number;
+    title: string;
+    genre: string;
+    isbn: string;
+    description: string;
+    author_id: number;
+    price: number;
+    publish_date: string;
+}
+
+// Create a new book
+async function createBook(book: Book): Promise<void> {
+    const query = `
+        INSERT INTO Books (book_id, title, genre, isbn, description, author_id, price, publish_date)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `;
+    const values = [book.book_id, book.title, book.genre, book.isbn, book.description, book.author_id, book.price, book.publish_date];
+    
+    try {
+        await pool.query(query, values);
+        console.log('Book created successfully');
+    } catch (err) {
+        console.error('Error creating book:', err);
+    }
+}
+
+// Read a book
+async function readBook(book_id: number): Promise<Book | null> {
+    const query = 'SELECT * FROM Books WHERE book_id = $1';
+    
+    try {
+        const res = await pool.query(query, [book_id]);
+        if (res.rows.length) {
+            return res.rows[0] as Book;
+        } else {
+            console.log('Book not found');
+            return null;
+        }
+    } catch (err) {
+        console.error('Error reading book:', err);
+        return null;
+    }
+}
+
+// Update a book
+async function updateBook(book: Book): Promise<void> {
+    const query = `
+        UPDATE Books
+        SET title = $1, genre = $2, isbn = $3, description = $4, author_id = $5, price = $6, publish_date = $7
+        WHERE book_id = $8
+    `;
+    const values = [book.title, book.genre, book.isbn, book.description, book.author_id, book.price, book.publish_date, book.book_id];
+    
+    try {
+        await pool.query(query, values);
+        console.log('Book updated successfully');
+    } catch (err) {
+        console.error('Error updating book:', err);
+    }
+}
+
+// Delete a book
+async function deleteBook(book_id: number): Promise<void> {
+    const query = 'DELETE FROM Books WHERE book_id = $1';
+    
+    try {
+        await pool.query(query, [book_id]);
+        console.log('Book deleted successfully');
+    } catch (err) {
+        console.error('Error deleting book:', err);
+    }
+}
+
+(async () => {
+    // Create a new book
+    const newBook: Book = {
+        book_id: 1,
+        title: '1984',
+        genre: 'Dystopian',
+        isbn: '9780451524935',
+        description: 'totalitarian regime',
+        author_id: 1,
+        price: 15.99,
+        publish_date: '1949-06-08',
+    };
+    await createBook(newBook);
+
+    // Read the book
+    const book = await readBook(1);
+    console.log('Read book:', book);
+
+    // Update the book
+    if (book) {
+        book.title = 'Nineteen Eighty-Four';
+        await updateBook(book);
+    }
+
+    // Delete the book
+    await deleteBook(1);
+
+    // Close the pool
+    await pool.end();
+})();
